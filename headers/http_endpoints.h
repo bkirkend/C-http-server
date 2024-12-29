@@ -15,5 +15,6 @@ void http_resp(int incoming_sd);
 void http_json_from_file(int incoming_sd, char *jsonfile);
 void http_html_from_file(int incoming_sd, char *htmlfile);
 void http_img_from_file(int incoming_sd, char *faviconfile);
+void http_jscript_from_file(int incoming_sd, char* jscriptfile);
 
 

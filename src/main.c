@@ -58,6 +58,9 @@ int main(int argc, char **argv) {
       } else if (endpoint_check(req_type, endpoint, "GET", "/index.html")){
         http_html_from_file(incoming_sd, "html/index.html");
         printf("Sending html\n");
+      } else if (endpoint_check(req_type, endpoint, "GET", "/index.js")){
+        http_jscript_from_file(incoming_sd, "javascript/index.js");
+        printf("Sending javascript\n");
       } else {
         printf("Unrecognized cmd\n");
       }

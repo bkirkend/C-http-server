@@ -131,7 +131,7 @@ void http_json_from_file(int incoming_sd, char* jsonfile) {
         exit_with_error("Failed to construct HTTP response");
     }
 
-    printf("%s", http_response);
+    // printf("%s", http_response);
 
     ret = send(incoming_sd, http_response, total_size - 1, 0); // Don't send the null terminator
     if (ret == -1) {
@@ -216,4 +216,59 @@ void http_img_from_file(int incoming_sd, char *faviconfile){
       close(incoming_sd);
       exit_with_error("Failed to send HTTP response");
   }
+}
+
+void http_jscript_from_file(int incoming_sd, char* jscriptfile) {
+    char *jscript_data;
+    int jscript_data_len;
+
+    readfile(jscriptfile, "r", &jscript_data, &jscript_data_len);
+    if (jscript_data == NULL) {
+        close(incoming_sd);
+        exit_with_error("Failed to allocate jscript_data");
+    }
+
+    int header_size = snprintf(NULL, 0,
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: application/javascript\r\n"
+        "Content-Length: %d\r\n"
+        "Connection: keep-alive\r\n"
+        "\r\n", jscript_data_len);
+    
+    if (header_size < 0) {
+        close(incoming_sd);
+        exit_with_error("Failed to calculate header size");
+    }
+
+    int total_size = header_size + jscript_data_len + 1; // +1 for the null terminator
+    char *http_response = (char *)malloc(total_size);
+    if (http_response == NULL) {
+        close(incoming_sd);
+        exit_with_error("Failed to allocate memory for HTTP response");
+    }
+
+    int ret = snprintf(http_response, total_size,
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: application/jscript\r\n"
+        "Content-Length: %d\r\n"
+        "Connection: keep-alive\r\n"
+        "\r\n"
+        "%s", jscript_data_len, jscript_data);
+
+    free(jscript_data);
+
+    if (ret < 0 || ret >= total_size) {
+        close(incoming_sd);
+        free(http_response);
+        exit_with_error("Failed to construct HTTP response");
+    }
+
+    ret = send(incoming_sd, http_response, total_size - 1, 0); // Don't send the null terminator
+    if (ret == -1) {
+        close(incoming_sd);
+        free(http_response);
+        exit_with_error("Failed to send HTTP response");
+    }
+
+    free(http_response);
 }
