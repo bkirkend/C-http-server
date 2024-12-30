@@ -49,17 +49,18 @@ int main(int argc, char **argv) {
       if (endpoint_check(req_type, endpoint, "GET", "/")){
         printf("default endpoint\n");
       } else if (endpoint_check(req_type, endpoint, "GET", "/json")){
-        http_json_from_file(incoming_sd, "json/nfl.json");
+        http_send_file(incoming_sd, "json/nfl.json", "rb", "application/json", "keep-alive");
+        printf("send json payload\n");
       } else if (endpoint_check(req_type, endpoint, "GET", "/print")){
         printf("Hello World\n");
       } else if (endpoint_check(req_type, endpoint, "GET", "/favicon.ico")){
-        http_img_from_file(incoming_sd, "img/B.ico");
+        http_send_file(incoming_sd, "img/B.ico", "rb", "image/x-icon", "close");
         printf("After sending img\n");
       } else if (endpoint_check(req_type, endpoint, "GET", "/index.html")){
-        http_html_from_file(incoming_sd, "html/index.html");
+        http_send_file(incoming_sd, "html/index.html", "r", "text/html", "keep-alive");
         printf("Sending html\n");
       } else if (endpoint_check(req_type, endpoint, "GET", "/index.js")){
-        http_jscript_from_file(incoming_sd, "javascript/index.js");
+        http_send_file(incoming_sd, "javascript/index.js", "r", "application/javascript", "keep-alive");
         printf("Sending javascript\n");
       } else {
         printf("Unrecognized cmd\n");

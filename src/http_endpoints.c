@@ -49,158 +49,26 @@ bool comp_req_type(char* http_req, char* req_type, char* endpoint){
   return *endpoint == '\0';
 }
 
-// currently unused
-void http_resp(int incoming_sd){
-    const char *json_body =
-        "{\n"
-        "  \"status\": \"success\",\n"
-        "  \"data\": {\n"
-        "    \"id\": 1,\n"
-        "    \"name\": \"John Doe\",\n"
-        "    \"email\": \"john.doe@example.com\"\n"
-        "  }\n"
-        "}";
-
-    char response[1024];
-    int json_body_len = str_len(json_body);
-
-    // Construct HTTP response dynamically
-    int ret = snprintf(response, sizeof(response),
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: application/json\r\n"
-        "Content-Length: %d\r\n"
-        "Connection: keep-alive\r\n"
-        "\r\n"
-        "%s", json_body_len, json_body);
-
-    if (ret < 0 || ret >= sizeof(response)) {
-        close(incoming_sd);
-        exit_with_error("Failed to construct HTTP response");
-    }
-
-    // Send the response
-    ret = send(incoming_sd, response, str_len(response), 0);
-    if (ret == -1) {
-        close(incoming_sd);
-        exit_with_error("Failed to send HTTP response");
-    }
-}
-
-void http_json_from_file(int incoming_sd, char* jsonfile) {
-    char *json_data;
-    int json_data_len;
-
-    readfile(jsonfile, "r", &json_data, &json_data_len);
-    if (json_data == NULL) {
-        close(incoming_sd);
-        exit_with_error("Failed to allocate json_data");
-    }
-
-    int header_size = snprintf(NULL, 0,
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: application/json\r\n"
-        "Content-Length: %d\r\n"
-        "Connection: keep-alive\r\n"
-        "\r\n", json_data_len);
-    
-    if (header_size < 0) {
-        close(incoming_sd);
-        exit_with_error("Failed to calculate header size");
-    }
-
-    int total_size = header_size + json_data_len + 1; // +1 for the null terminator
-    char *http_response = (char *)malloc(total_size);
-    if (http_response == NULL) {
-        close(incoming_sd);
-        exit_with_error("Failed to allocate memory for HTTP response");
-    }
-
-    int ret = snprintf(http_response, total_size,
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: application/json\r\n"
-        "Content-Length: %d\r\n"
-        "Connection: keep-alive\r\n"
-        "\r\n"
-        "%s", json_data_len, json_data);
-
-    free(json_data);
-
-    if (ret < 0 || ret >= total_size) {
-        close(incoming_sd);
-        free(http_response);
-        exit_with_error("Failed to construct HTTP response");
-    }
-
-    // printf("%s", http_response);
-
-    ret = send(incoming_sd, http_response, total_size - 1, 0); // Don't send the null terminator
-    if (ret == -1) {
-        close(incoming_sd);
-        free(http_response);
-        exit_with_error("Failed to send HTTP response");
-    }
-
-    free(http_response);
-}
-
-void http_html_from_file(int incoming_sd, char *htmlfile){
-  char *http_payload;
-  int http_payload_size;
-
-  readfile(htmlfile, "r", &http_payload, &http_payload_size);
-
-  const char *header_template = 
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: text/html; charset=UTF-8\r\n"
-        "Content-Length: %d\r\n"
-        "Connection: close\r\n"
-        "\r\n";
-
-  int header_size = snprintf(NULL, 0, header_template, http_payload_size);
-  if (header_size < 0) {
-      close(incoming_sd);
-      exit_with_error("Failed to get HTTP header size");
-  }
-  
-  char* header = malloc((header_size + 1) * sizeof(char)); 
-  snprintf(header, header_size + 1, header_template, http_payload_size);
-  int ret = send(incoming_sd, header, header_size, 0);
-
-  free(header);
-  if (ret == -1) {
-      close(incoming_sd);
-      exit_with_error("Failed to send HTTP response");
-  }
-
-  ret = send(incoming_sd, http_payload, http_payload_size, 0);
-
-  free(http_payload);
-  if (ret == -1) {
-      close(incoming_sd);
-      exit_with_error("Failed to send HTTP response");
-  }
-}
-
-void http_img_from_file(int incoming_sd, char *faviconfile){
-  char *img_bin;
-  int img_bin_len;
-  readfile(faviconfile, "rb", &img_bin, &img_bin_len);
+void http_send_file(int incoming_sd, char *file, char* file_mode, char* content_type, char* connection) {
+  char *file_buf;
+  int file_buf_len;
+  readfile(file, file_mode, &file_buf, &file_buf_len);
 
   const char *header = 
         "HTTP/1.1 200 OK\r\n"
-        "Content-Type: image/x-icon\r\n"
+        "Content-Type: %s\r\n"
         "Content-Length: %d\r\n"
-        "Connection: close\r\n"
+        "Connection: %s\r\n"
         "\r\n";
 
-  int header_size = snprintf(NULL, 0, header, img_bin_len);
+  int header_size = snprintf(NULL, 0, header, content_type, file_buf_len, connection);
   if (header_size < 0) {
       close(incoming_sd);
       exit_with_error("Failed to get HTTP header size");
   }
 
   char *http_header = malloc((header_size + 1) * sizeof(char));
-  snprintf(http_header, header_size + 1, header, img_bin_len);
+  snprintf(http_header, header_size + 1, header, content_type, file_buf_len, connection);
   int ret = send(incoming_sd, http_header, header_size, 0);
   free(http_header);
  
@@ -209,66 +77,11 @@ void http_img_from_file(int incoming_sd, char *faviconfile){
       exit_with_error("Failed to send HTTP response");
   }
   
-  ret = send(incoming_sd, img_bin, img_bin_len, 0);
-  free(img_bin);
+  ret = send(incoming_sd, file_buf, file_buf_len, 0);
+  free(file_buf);
 
   if (ret == -1) {
       close(incoming_sd);
       exit_with_error("Failed to send HTTP response");
   }
-}
-
-void http_jscript_from_file(int incoming_sd, char* jscriptfile) {
-    char *jscript_data;
-    int jscript_data_len;
-
-    readfile(jscriptfile, "r", &jscript_data, &jscript_data_len);
-    if (jscript_data == NULL) {
-        close(incoming_sd);
-        exit_with_error("Failed to allocate jscript_data");
-    }
-
-    int header_size = snprintf(NULL, 0,
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: application/javascript\r\n"
-        "Content-Length: %d\r\n"
-        "Connection: keep-alive\r\n"
-        "\r\n", jscript_data_len);
-    
-    if (header_size < 0) {
-        close(incoming_sd);
-        exit_with_error("Failed to calculate header size");
-    }
-
-    int total_size = header_size + jscript_data_len + 1; // +1 for the null terminator
-    char *http_response = (char *)malloc(total_size);
-    if (http_response == NULL) {
-        close(incoming_sd);
-        exit_with_error("Failed to allocate memory for HTTP response");
-    }
-
-    int ret = snprintf(http_response, total_size,
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: application/jscript\r\n"
-        "Content-Length: %d\r\n"
-        "Connection: keep-alive\r\n"
-        "\r\n"
-        "%s", jscript_data_len, jscript_data);
-
-    free(jscript_data);
-
-    if (ret < 0 || ret >= total_size) {
-        close(incoming_sd);
-        free(http_response);
-        exit_with_error("Failed to construct HTTP response");
-    }
-
-    ret = send(incoming_sd, http_response, total_size - 1, 0); // Don't send the null terminator
-    if (ret == -1) {
-        close(incoming_sd);
-        free(http_response);
-        exit_with_error("Failed to send HTTP response");
-    }
-
-    free(http_response);
 }

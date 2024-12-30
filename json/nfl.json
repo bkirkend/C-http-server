@@ -1,67 +1,70 @@
-[
-  {
-    "team": "Kansas City Chiefs",
-    "city": "Kansas City",
-    "stadium": "Arrowhead Stadium",
-    "head_coach": "Andy Reid",
-    "founded": 1960,
-    "championships": 3,
-    "players": [
-      {"name": "Patrick Mahomes", "position": "QB", "jersey_number": 15},
-      {"name": "Travis Kelce", "position": "TE", "jersey_number": 87},
-      {"name": "Chris Jones", "position": "DT", "jersey_number": 95}
-    ]
-  },
-  {
-    "team": "Philadelphia Eagles",
-    "city": "Philadelphia",
-    "stadium": "Lincoln Financial Field",
-    "head_coach": "Nick Sirianni",
-    "founded": 1933,
-    "championships": 4,
-    "players": [
-      {"name": "Jalen Hurts", "position": "QB", "jersey_number": 1},
-      {"name": "A.J. Brown", "position": "WR", "jersey_number": 11},
-      {"name": "Darius Slay", "position": "CB", "jersey_number": 2}
-    ]
-  },
-  {
-    "team": "San Francisco 49ers",
-    "city": "San Francisco",
-    "stadium": "Levi's Stadium",
-    "head_coach": "Kyle Shanahan",
-    "founded": 1946,
-    "championships": 5,
-    "players": [
-      {"name": "Brock Purdy", "position": "QB", "jersey_number": 13},
-      {"name": "Deebo Samuel", "position": "WR", "jersey_number": 19},
-      {"name": "Nick Bosa", "position": "DE", "jersey_number": 97}
-    ]
-  },
-  {
-    "team": "Dallas Cowboys",
-    "city": "Dallas",
-    "stadium": "AT&T Stadium",
-    "head_coach": "Mike McCarthy",
-    "founded": 1960,
-    "championships": 5,
-    "players": [
-      {"name": "Dak Prescott", "position": "QB", "jersey_number": 4},
-      {"name": "CeeDee Lamb", "position": "WR", "jersey_number": 88},
-      {"name": "Micah Parsons", "position": "LB", "jersey_number": 11}
-    ]
-  },
-  {
-    "team": "Buffalo Bills",
-    "city": "Buffalo",
-    "stadium": "Highmark Stadium",
-    "head_coach": "Sean McDermott",
-    "founded": 1960,
-    "championships": 0,
-    "players": [
-      {"name": "Josh Allen", "position": "QB", "jersey_number": 17},
-      {"name": "Stefon Diggs", "position": "WR", "jersey_number": 14},
-      {"name": "Von Miller", "position": "LB", "jersey_number": 40}
-    ]
-  }
-]
+{
+  "teams": [
+    {
+      "team_name": "New England Patriots",
+      "abbreviation": "NE",
+      "city": "Foxborough",
+      "state": "Massachusetts",
+      "established": 1959,
+      "stadium": "Gillette Stadium",
+      "colors": ["Navy", "Red", "Silver"],
+      "super_bowl_wins": 6,
+      "head_coach": "Bill Belichick"
+    },
+    {
+      "team_name": "Dallas Cowboys",
+      "abbreviation": "DAL",
+      "city": "Arlington",
+      "state": "Texas",
+      "established": 1960,
+      "stadium": "AT&T Stadium",
+      "colors": ["Navy", "Silver", "White"],
+      "super_bowl_wins": 5,
+      "head_coach": "Mike McCarthy"
+    },
+    {
+      "team_name": "San Francisco 49ers",
+      "abbreviation": "SF",
+      "city": "Santa Clara",
+      "state": "California",
+      "established": 1946,
+      "stadium": "Levi's Stadium",
+      "colors": ["Red", "Gold"],
+      "super_bowl_wins": 5,
+      "head_coach": "Kyle Shanahan"
+    },
+    {
+      "team_name": "Green Bay Packers",
+      "abbreviation": "GB",
+      "city": "Green Bay",
+      "state": "Wisconsin",
+      "established": 1919,
+      "stadium": "Lambeau Field",
+      "colors": ["Green", "Gold"],
+      "super_bowl_wins": 4,
+      "head_coach": "Matt LaFleur"
+    },
+    {
+      "team_name": "Kansas City Chiefs",
+      "abbreviation": "KC",
+      "city": "Kansas City",
+      "state": "Missouri",
+      "established": 1960,
+      "stadium": "Arrowhead Stadium",
+      "colors": ["Red", "Gold", "White"],
+      "super_bowl_wins": 2,
+      "head_coach": "Andy Reid"
+    },
+    {
+      "team_name": "Indianapolis Colts",
+      "abbreviation": "IND",
+      "city": "Indianapolis",
+      "state": "Indiana",
+      "established": 1953,
+      "stadium": "Lucas Oil Stadium",
+      "colors": ["Colts Blue", "White"],
+      "super_bowl_wins": 2,
+      "head_coach": "Shane Steichen"
+    }
+  ]
+}
