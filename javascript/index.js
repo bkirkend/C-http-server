@@ -12,3 +12,8 @@ window.onload = function() {
     // Append the new paragraph to the container
     container.appendChild(para);
 };
+
+hello = () => {
+  alert("hello");
+}
+

@@ -1,11 +1,12 @@
 CC= gcc
-CFLAGS= -Werror
+CFLAGS= -Werror -pthread
 EXE= server
 SOURCES= \
 	src/main.c \
 	src/str.c \
 	src/socket.c \
 	src/util.c \
+	src/queue.c \
 	src/http_endpoints.c
 PORT= 3333
 
