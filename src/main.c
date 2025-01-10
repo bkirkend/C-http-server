@@ -37,8 +37,6 @@ void* worker_thread_func(void* arg) {
             pthread_cond_wait(&queue_cond, &queue_mutex);  
         }
       
-        printf("queue is not empty... proceeding\n");
-
         int incoming_sd = dequeue(work_queue);
         // printf("Worker thread dequeued socket %d\n", incoming_sd);
         // queue_print(work_queue);
@@ -59,7 +57,7 @@ void* worker_thread_func(void* arg) {
 
         // endpoint handlers
         if (endpoint_check(req_type, endpoint, "GET", "/")) {
-            printf("Handling default endpoint\n");
+            http_send_file(incoming_sd, "html/index.html", "r", "text/html", "keep-alive");
         } else if (endpoint_check(req_type, endpoint, "GET", "/json")) {
             printf("Sending json payload\n");
             http_send_file(incoming_sd, "json/nfl.json", "rb", "application/json", "keep-alive");
@@ -68,8 +66,6 @@ void* worker_thread_func(void* arg) {
         } else if (endpoint_check(req_type, endpoint, "GET", "/favicon.ico")) {
             printf("Sending favicon.ico\n");
             http_send_file(incoming_sd, "img/B.ico", "rb", "image/x-icon", "close");
-        } else if (endpoint_check(req_type, endpoint, "GET", "/index.html")) {
-            http_send_file(incoming_sd, "html/index.html", "r", "text/html", "keep-alive");
         } else if (endpoint_check(req_type, endpoint, "GET", "/index.js")) {
             http_send_file(incoming_sd, "javascript/index.js", "r", "application/javascript", "keep-alive");
         } else {
