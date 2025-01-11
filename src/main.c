@@ -98,6 +98,7 @@ int main(int argc, char **argv) {
 
     int port = get_port(argv[1]);
     server_sd = init_socket();
+    sockopt_wrapper(server_sd);
     // printf("Main: Server socket initialized, fd: %d\n", server_sd);
 
     socklen_t sv_addr_len;

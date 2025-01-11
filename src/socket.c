@@ -7,6 +7,12 @@ int init_socket(void){
   return sd;
 }
 
+void sockopt_wrapper(int server_sd){
+  int opt = 1;
+  int ret = setsockopt(server_sd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+  if (ret < 0) exit_with_error("Failed to set socket options");
+}
+
 struct sockaddr_in* bind_port(int sd, int port, socklen_t *sv_addr_len){
   struct sockaddr_in* sv_addr = malloc(sizeof(struct sockaddr_in));
   if (sv_addr == NULL){
