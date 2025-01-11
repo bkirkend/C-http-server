@@ -67,7 +67,9 @@ void* worker_thread_func(void* arg) {
             printf("Sending favicon.ico\n");
             http_send_file(incoming_sd, "img/B.ico", "rb", "image/x-icon", "close");
         } else if (endpoint_check(req_type, endpoint, "GET", "/index.js")) {
-            http_send_file(incoming_sd, "javascript/index.js", "r", "application/javascript", "keep-alive");
+            http_send_file(incoming_sd, "javascript/index.js", "r", "application/javascript", "close");
+        } else if (endpoint_check(req_type, endpoint, "GET", "/styles.css")){
+            http_send_file(incoming_sd, "css/styles.css", "r", "text/css", "close");
         } else {
             printf("Unrecognized endpoint\n");
         }

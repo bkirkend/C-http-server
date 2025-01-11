@@ -1,0 +1,39 @@
+/* Style for the container to center the content */
+#message-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows the items to wrap and prevent them from being cramped */
+    justify-content: center; /* Center the content horizontally */
+    gap: 20px; /* Adds space between the items */
+    padding: 20px; /* Adds padding around the container */
+}
+
+/* Style for each team div */
+.team {
+    background-color: #f4f4f4; /* Light background for each team */
+    padding: 20px; /* Adds padding inside each team div */
+    border-radius: 8px; /* Rounds the corners */
+    width: 250px; /* Fixed width for each team div */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for a card-like effect */
+    margin: 10px; /* Adds space between the divs */
+    text-align: center; /* Center the text inside each team div */
+}
+
+/* Style for team name */
+.team h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333; /* Dark text color */
+}
+
+/* Style for each detail (like abbreviation, city, etc.) */
+.team p {
+    font-size: 14px;
+    color: #555; /* Lighter text color */
+    margin: 5px 0; /* Adds spacing between paragraphs */
+}
+
+/* Optional: Add a little bit of hover effect */
+.team:hover {
+    background-color: #eaeaea; /* Slightly darker background when hovered */
+    cursor: pointer; /* Change cursor to indicate it's clickable */
+}
