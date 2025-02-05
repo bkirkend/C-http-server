@@ -5,6 +5,8 @@
 #include "../headers/socket.h"
 #include "../headers/queue.h"
 #include "../headers/http_endpoints.h"
+#include "../headers/hashmap.h"
+#include "../headers/endpoint_handlers.h"
 
 #define MAX_THREAD_COUNT 10
 #define BACKLOG_SIZE 5
@@ -16,6 +18,7 @@ pthread_t threadpool[MAX_THREAD_COUNT];
 queue *work_queue;
 pthread_mutex_t queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t queue_cond = PTHREAD_COND_INITIALIZER;
+hashmap *endpoint_map = NULL;
 
 // cleanup on SIGINT
 void handle_cleanup(int sig) {
@@ -25,6 +28,7 @@ void handle_cleanup(int sig) {
     queue_free(work_queue);
     pthread_mutex_destroy(&queue_mutex);
     pthread_cond_destroy(&queue_cond);
+    free_hashmap(endpoint_map);
     exit(EXIT_SUCCESS);
 }
 
@@ -55,23 +59,12 @@ void* worker_thread_func(void* arg) {
         get_req_info(buffer, &req_type, &endpoint);
         printf("Worker thread: req_type: %s, endpoint: %s\n", req_type, endpoint);
 
-        // endpoint handlers
-        if (endpoint_check(req_type, endpoint, "GET", "/")) {
-            http_send_file(incoming_sd, "html/index.html", "r", "text/html", "keep-alive");
-        } else if (endpoint_check(req_type, endpoint, "GET", "/json")) {
-            printf("Sending json payload\n");
-            http_send_file(incoming_sd, "json/nfl.json", "rb", "application/json", "keep-alive");
-        } else if (endpoint_check(req_type, endpoint, "GET", "/print")) {
-            printf("Hello World\n");
-        } else if (endpoint_check(req_type, endpoint, "GET", "/favicon.ico")) {
-            printf("Sending favicon.ico\n");
-            http_send_file(incoming_sd, "img/B.ico", "rb", "image/x-icon", "close");
-        } else if (endpoint_check(req_type, endpoint, "GET", "/index.js")) {
-            http_send_file(incoming_sd, "javascript/index.js", "r", "application/javascript", "close");
-        } else if (endpoint_check(req_type, endpoint, "GET", "/styles.css")){
-            http_send_file(incoming_sd, "css/styles.css", "r", "text/css", "close");
+        hashnode *endpoint_node;
+        if((endpoint_node = get_node(endpoint_map, endpoint)) != NULL) {
+          // printf("Got endpoint %s\n", endpoint_node->key);
+          endpoint_node->handler(incoming_sd);
         } else {
-            printf("Unrecognized endpoint\n");
+          printf("Endpoint not found\n");
         }
 
         free(req_type);
@@ -89,6 +82,7 @@ void create_worker_threads() {
         }
     }
 }
+
 
 // Main function
 int main(int argc, char **argv) {
@@ -114,6 +108,9 @@ int main(int argc, char **argv) {
     // initialize the queue and worker threads
     work_queue = queue_init();
     create_worker_threads();
+
+    //initialize endpoint hashmap
+    endpoint_map = create_hashmap();
 
     // connection loop
     for (;;) {

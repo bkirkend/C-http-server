@@ -7,7 +7,10 @@ SOURCES= \
 	src/socket.c \
 	src/util.c \
 	src/queue.c \
-	src/http_endpoints.c
+	src/http_endpoints.c \
+	src/hashmap.c \
+	src/endpoint_handlers.c
+
 PORT= 3333
 
 $(EXE): clean 
