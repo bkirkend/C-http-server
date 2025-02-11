@@ -116,7 +116,7 @@ void http_send_raw_msg(int incoming_sd, char *msg, char *connection) {
   str_n_cpy(header, http_msg, header_len);
   str_n_cpy(msg, http_msg + header_len, msg_len + 1);
 
-  printf("Sending MSG:\n %s\n", http_msg);
+  // printf("Sending MSG:\n %s\n", http_msg);
   int ret = send(incoming_sd, http_msg, total_len, 0);
   
   free(header);
