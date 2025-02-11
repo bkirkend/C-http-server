@@ -30,6 +30,10 @@ void traffic_light_handler(int incoming_sd){
   http_send_file(incoming_sd, "html/traffic_light.html", "r", "text/html", "keep-alive");
 }
 
+void test_raw_msg_handler(int incoming_sd){
+  http_send_raw_msg(incoming_sd, "test message", "close");
+}
+
 
 hashmap* create_hashmap(){
   hashmap* hmap = init_map();
@@ -40,5 +44,6 @@ hashmap* create_hashmap(){
   add_node(hmap, "/index.js", javascript_index_handler);
   add_node(hmap, "/styles.css", css_styles_handler);
   add_node(hmap, "/traffic_light", traffic_light_handler);
+  add_node(hmap, "/raw_msg", test_raw_msg_handler);
   return hmap;
 }

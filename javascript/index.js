@@ -48,6 +48,19 @@ window.onload = function() {
         });
 };
 
-hello = () => {
-    alert("Button pressed");
+const hello = async () => {
+    try {
+        const response = await fetch("http://localhost/raw_msg", {
+            headers: { "Accept": "text/raw" }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const text = await response.text();
+        alert(text);
+    } catch (error) {
+        alert("Error fetching message: " + error.message);
+    }
 };

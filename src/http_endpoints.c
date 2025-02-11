@@ -85,3 +85,45 @@ void http_send_file(int incoming_sd, char *file, char* file_mode, char* content_
       exit_with_error("Failed to send HTTP response");
   }
 }
+
+void http_send_raw_msg(int incoming_sd, char *msg, char *connection) {
+  const char *header_template = 
+      "HTTP/1.1 200 OK\r\n"
+      "Content-Type: text/plain\r\n"
+      "Content-Length: %d\r\n"
+      "Connection: %s\r\n"
+      "\r\n";
+
+  int msg_len = str_len(msg);
+  int header_len = snprintf(NULL, 0, header_template, msg_len, connection);
+
+  char *header = malloc(header_len + 1);
+  if (!header) {
+    close(incoming_sd);
+    exit_with_error("Memory allocation failed for HTTP header");
+  }
+
+  snprintf(header, header_len + 1, header_template, msg_len, connection);
+
+  int total_len = header_len + msg_len;
+  char *http_msg = malloc(total_len + 1);
+  if (!http_msg) {
+    free(header);
+    close(incoming_sd);
+    exit_with_error("Memory allocation failed for HTTP response");
+  }
+
+  str_n_cpy(header, http_msg, header_len);
+  str_n_cpy(msg, http_msg + header_len, msg_len + 1);
+
+  printf("Sending MSG:\n %s\n", http_msg);
+  int ret = send(incoming_sd, http_msg, total_len, 0);
+  
+  free(header);
+  free(http_msg);
+
+  if (ret == -1) {
+    close(incoming_sd);
+    exit_with_error("Failed to send raw HTTP response");
+  }
+}
