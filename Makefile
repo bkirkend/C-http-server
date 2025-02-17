@@ -11,10 +11,13 @@ SOURCES= \
 	src/hashmap.c \
 	src/endpoint_handlers.c
 
-PORT= 3333
+PORT=80
 
 $(EXE): clean 
 	$(CC) $(SOURCES) $(CFLAGS) -o $@
+
+run : $(EXE)
+	./$(EXE) 80 
 
 memory: $(EXE)
 	leaks --atExit -- ./$(EXE) $(PORT)

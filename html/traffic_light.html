@@ -67,15 +67,15 @@
             document.getElementById('yellow').classList.remove('yellow');
             document.getElementById('green').classList.remove('green');
 
-            if (currentLight === 'red') {
+            if (currentLight === 'green') {
                 currentLight = 'yellow';
                 document.getElementById('yellow').classList.add('yellow');
             } else if (currentLight === 'yellow') {
-                currentLight = 'green';
-                document.getElementById('green').classList.add('green');
-            } else {
                 currentLight = 'red';
                 document.getElementById('red').classList.add('red');
+            } else {
+                currentLight = 'green';
+                document.getElementById('green').classList.add('green');
             }
         }
 
