@@ -14,10 +14,10 @@ SOURCES= \
 PORT=80
 
 $(EXE): clean 
-	$(CC) $(SOURCES) $(CFLAGS) -o $@
+	$(CC) $(SOURCES) $(CFLAGS) -o $@ && ./$(EXE) $(PORT)
 
 run : $(EXE)
-	./$(EXE) 80 
+	./$(EXE) $(PORT)
 
 memory: $(EXE)
 	leaks --atExit -- ./$(EXE) $(PORT)
