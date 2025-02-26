@@ -27,7 +27,7 @@ hashmap* init_map(void) {
     return hmap;
 }
 
-hashnode *init_hash_node(char *key, void (*func)(int)) {
+hashnode *init_hash_node(char *key, endpoint_handler func) {
     if (!key) {
         printf("Error: NULL key passed\n");
         return NULL;
@@ -90,7 +90,7 @@ hashnode* get_node(hashmap *hmap, char *key) {
     return NULL;
 }
 
-void add_node(hashmap *hmap, char *key, void (*func)(int)) {
+void add_node(hashmap *hmap, char *key, endpoint_handler func) {
     if (!hmap) {
         printf("Error: hashmap is NULL\n");
         return;

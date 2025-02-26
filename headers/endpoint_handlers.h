@@ -1,4 +1,3 @@
-
 hashmap* create_hashmap();
 void html_index_handler(void);
 void nfl_json_handler(void);
