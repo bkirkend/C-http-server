@@ -1,6 +1,11 @@
+#ifndef H_ENDPT_PARSE
+#include "endpoint_parse.h"
+
+#endif // !H_ENDPT_PARSE
+//
 #define INIT_CAP 10
 
-typedef void (*endpoint_handler)(int);
+typedef void (*endpoint_handler)(int, q_params*);
 
 typedef struct _hashNode{
   struct _hashNode* next;

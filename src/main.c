@@ -4,8 +4,8 @@
 #include "../headers/str.h"
 #include "../headers/socket.h"
 #include "../headers/queue.h"
-#include "../headers/http_endpoints.h"
 #include "../headers/hashmap.h"
+#include "../headers/http_endpoints.h"
 #include "../headers/endpoint_handlers.h"
 
 #define MAX_THREAD_COUNT 10
@@ -55,14 +55,14 @@ void* worker_thread_func(void* arg) {
             continue;
         }
 
-        char *req_type, *endpoint;
-        get_req_info(buffer, &req_type, &endpoint);
-        printf("Worker thread: req_type: %s, endpoint: %s\n", req_type, endpoint);
+        char *req_type;
+        endpoint_t *endpoint = get_req_info(buffer, &req_type);
+        printf("Worker thread: req_type: %s, endpoint: %s\n", req_type, endpoint->handle);
 
         hashnode *endpoint_node;
-        if((endpoint_node = get_node(endpoint_map, endpoint)) != NULL) {
+        if((endpoint_node = get_node(endpoint_map, endpoint->handle)) != NULL) {
           // printf("Got endpoint %s\n", endpoint_node->key);
-          endpoint_node->handler(incoming_sd);
+          endpoint_node->handler(incoming_sd, endpoint->params);
         } else {
           printf("Endpoint not found\n");
         }

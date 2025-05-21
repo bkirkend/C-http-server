@@ -6,9 +6,9 @@ bool endpoint_check(const char *req_type, const char *endpoint, const char *req_
   return str_cmp(endpoint, endpoint_str) && str_cmp(req_type, req_type_str);
 }
 
-void get_req_info(char *http_req, char **req_type, char **endpoint){
+endpoint_t* get_req_info(char *http_req, char **req_type){
   int req_type_len = 0;
-  int endpoint_len = 0; 
+  int url_len = 0; 
   char *http_ptr = http_req;
   while(*http_ptr++ != ' ') req_type_len++;
 
@@ -20,11 +20,17 @@ void get_req_info(char *http_req, char **req_type, char **endpoint){
 
   http_req = http_ptr;
   // extract request endpoint
-  while(*http_ptr++ != ' ') endpoint_len++;
-  *endpoint = malloc((endpoint_len + 1) * sizeof(char));
-  str_n_cpy(http_req, *endpoint, endpoint_len);
-  (*endpoint)[endpoint_len] = '\0';
-  printf("In func endpoint:\n %s\n", *endpoint);
+  while(*http_ptr++ != ' ') url_len++;
+  char *url = malloc((url_len + 1) * sizeof(char));
+  str_n_cpy(http_req, url, url_len);
+  (url)[url_len] = '\0';
+
+  endpoint_t *endpoint = parse_endpoint(url);
+  printf("In func endpoint:\n %s\n", url);
+  printf("Printing endpoint parse: \n");
+  print_endpoint(endpoint);
+
+  return endpoint;
 }
 
 bool comp_req_type(char* http_req, char* req_type, char* endpoint){

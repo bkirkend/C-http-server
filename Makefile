@@ -9,7 +9,8 @@ SOURCES= \
 	src/queue.c \
 	src/http_endpoints.c \
 	src/hashmap.c \
-	src/endpoint_handlers.c
+	src/endpoint_handlers.c \
+	src/endpoint_parse.c
 
 PORT=80
 

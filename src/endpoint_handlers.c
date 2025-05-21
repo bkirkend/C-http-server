@@ -2,35 +2,35 @@
 #include "../headers/http_endpoints.h"
 #include <stdio.h>
 
-void html_index_handler(int incoming_sd){
+void html_index_handler(int incoming_sd, q_params *params){
   http_send_file(incoming_sd, "html/index.html", "r", "text/html", "keep-alive");
 }
 
-void nfl_json_handler(int incoming_sd){
+void nfl_json_handler(int incoming_sd, q_params *params){
   http_send_file(incoming_sd, "json/nfl.json", "rb", "application/json", "keep-alive");
 }
 
-void print_handler(int incoming_sd){
+void print_handler(int incoming_sd, q_params *params){
   printf("Hello, hit printing endpoint\n");
 }
 
-void favicon_handler(int incoming_sd){
+void favicon_handler(int incoming_sd, q_params *params){
   http_send_file(incoming_sd, "img/B.ico", "rb", "image/x-icon", "close");
 }
 
-void javascript_index_handler(int incoming_sd){
+void javascript_index_handler(int incoming_sd, q_params *params){
   http_send_file(incoming_sd, "javascript/index.js", "r", "application/javascript", "close");
 }
 
-void css_styles_handler(int incoming_sd){
+void css_styles_handler(int incoming_sd, q_params *params){
   http_send_file(incoming_sd, "css/styles.css", "r", "text/css", "close");
 }
 
-void traffic_light_handler(int incoming_sd){
+void traffic_light_handler(int incoming_sd, q_params *params){
   http_send_file(incoming_sd, "html/traffic_light.html", "r", "text/html", "keep-alive");
 }
 
-void test_raw_msg_handler(int incoming_sd){
+void test_raw_msg_handler(int incoming_sd, q_params *params){
   http_send_raw_msg(incoming_sd, "test message", "close");
 }
 
