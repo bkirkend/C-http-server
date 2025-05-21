@@ -68,7 +68,7 @@ void* worker_thread_func(void* arg) {
         }
 
         free(req_type);
-        free(endpoint);
+        free_endpoint(endpoint);
         close(incoming_sd);
     }
     return NULL;

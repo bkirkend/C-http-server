@@ -23,5 +23,6 @@ size_t len(char *endpoint);
 endpoint_t *endpoint_init();
 q_params *init_params();
 void print_endpoint(endpoint_t *e);
+void free_endpoint(endpoint_t *e);
 
 #endif // H_ENDPT_PARSE

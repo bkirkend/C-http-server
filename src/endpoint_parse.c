@@ -126,6 +126,18 @@ void print_endpoint(endpoint_t *e){
   }
 }
 
+void free_endpoint(endpoint_t *e){
+  for (int i = 0; i < e->params->size; i++){
+    free(e->params->keys[i]);
+    free(e->params->values[i]);
+  }
+  free(e->params->keys);
+  free(e->params->values);
+  free(e->params);
+  free(e->handle);
+  free(e);
+}
+
 // int main(int argc, char** argv){
 //   endpoint *e = parse_endpoint(argv[1]);
 //   print_endpoint(e);
